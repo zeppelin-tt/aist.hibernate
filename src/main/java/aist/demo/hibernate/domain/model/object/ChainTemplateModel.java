@@ -1,6 +1,6 @@
 package aist.demo.hibernate.domain.model.object;
 
-import aist.demo.hibernate.domain.entry.Stand;
+import aist.demo.hibernate.domain.entity.Stand;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

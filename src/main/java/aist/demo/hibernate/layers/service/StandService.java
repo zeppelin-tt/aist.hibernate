@@ -1,56 +1,56 @@
 package aist.demo.hibernate.layers.service;
 
-import aist.demo.hibernate.annotate.StorageLayer;
-import aist.demo.hibernate.domain.entry.Stand;
+import aist.demo.hibernate.domain.entity.Stand;
 import aist.demo.hibernate.domain.model.object.StandModel;
-import aist.demo.hibernate.exceptions.ConsistentModelException;
+import aist.demo.hibernate.exceptions.AistBaseException;
+import aist.demo.hibernate.exceptions.ConflictException;
+import aist.demo.hibernate.exceptions.NotFoundException;
 import aist.demo.hibernate.layers.converter.StandConverter;
 import aist.demo.hibernate.layers.repository.StandRepo;
+import aist.demo.hibernate.layers.validator.StandValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@StorageLayer
+@Service
 public class StandService {
 
     private final StandRepo standRepo;
     private final StandConverter standConverter;
+    private final StandValidator standValidator;
 
     @Autowired
-    public StandService(StandRepo standRepo, StandConverter standConverter) {
+    public StandService(StandRepo standRepo, StandConverter standConverter, StandValidator standValidator) {
         this.standRepo = standRepo;
         this.standConverter = standConverter;
+        this.standValidator = standValidator;
     }
 
-    // Может как-нибудь можно обойтись, не вынося Optional в контроллер?
-    public Optional<Stand> find(Long id) {
-//        Optional<Stand> standOpt = standRepo.findById(id);
-//        if (!standOpt.isPresent()) {
-//            throw new ConsistentModelException("There is no Stand by id: " + id);
-//        }
-        return standRepo.findById(id);
+    public StandModel find(Long id) {
+        Stand stand = standRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("There is no Stand by id: " + id));
+        return standConverter.convert(stand);
     }
 
-    public Stand save(StandModel standModel) {
-        if (standModel.getId() != null) {
-            throw new ConsistentModelException("This is Id in Stand for save");
-        }
-        if (standRepo.existsByStandNameOrCode(standModel.getName(), standModel.getCode())) {
-            throw new ConsistentModelException("Stand already exists by Name or Code!");
-        }
+    public Set<StandModel> findAll() {
+        return standRepo.findAll().stream()
+                .map(standConverter::convert)
+                .collect(Collectors.toSet());
+    }
+
+    public StandModel save(StandModel standModel) {
+        standValidator.forSave(standModel);
         Stand stand = standConverter.convert(standModel);
-        return standRepo.save(stand);
+        Stand savedStand = standRepo.save(stand);
+        return standConverter.convert(savedStand);
     }
 
-    public Stand update(StandModel standModel) {
-        if (standModel.getId() == null) {
-            throw new ConsistentModelException("This is no Id in Stand for update");
-        }
-        if (!standRepo.existsById(standModel.getId())) {
-            throw new ConsistentModelException("This Id is not in the database: " + standModel.toString()) ;
-        }
+    public Long update(StandModel standModel) {
+        standValidator.forUpdate(standModel);
         Stand stand = standConverter.convert(standModel);
-        return standRepo.save(stand);
+        return standRepo.save(stand).getId();
     }
 
 }
