@@ -1,4 +1,4 @@
-package aist.demo.hibernate.domain.model.object;
+package aist.demo.hibernate.domain.model;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -6,7 +6,7 @@ import lombok.NonNull;
 import java.util.Set;
 
 @Data
-public class StandModel {
+public class ContourModel {
 
     private Long id;
     @NonNull

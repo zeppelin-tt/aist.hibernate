@@ -1,4 +1,4 @@
-package aist.demo.hibernate.domain.model.object;
+package aist.demo.hibernate.domain.model;
 
 import aist.demo.hibernate.domain.entity.Chain;
 import lombok.Data;

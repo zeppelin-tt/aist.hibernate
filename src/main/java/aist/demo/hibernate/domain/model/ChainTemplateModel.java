@@ -1,6 +1,6 @@
-package aist.demo.hibernate.domain.model.object;
+package aist.demo.hibernate.domain.model;
 
-import aist.demo.hibernate.domain.entity.Stand;
+import aist.demo.hibernate.domain.entity.Contour;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -17,7 +17,7 @@ public class ChainTemplateModel {
     private String name;
     private String form;
     @NonNull
-    private Stand stanId;
+    private Contour stanId;
     private String login;
     private Set<Long> groupIdSet;
     private boolean withoutForm;
