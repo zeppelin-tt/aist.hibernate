@@ -4,11 +4,9 @@ import aist.demo.hibernate.annotate.Converter;
 import aist.demo.hibernate.domain.Chain;
 import aist.demo.hibernate.domain.Group;
 import aist.demo.hibernate.domain.User;
-import aist.demo.hibernate.model.UserModel;
+import aist.demo.hibernate.dto.UserDto;
 import aist.demo.hibernate.repository.ChainRepo;
 import aist.demo.hibernate.repository.GroupRepo;
-import aist.demo.hibernate.repository.TribeCommandRepo;
-import aist.demo.hibernate.repository.UserRepo;
 import aist.demo.hibernate.validator.UserValidator;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class UserConverter {
     }
 
     // для сохранения нового.
-    public User convert(UserModel model) throws Exception {
+    public User convert(UserDto model) throws Exception {
         User user = new User();
         byte[] b = hexStringToBytes(model.getPassword());
         String decryptedPass = DigestUtils.md5Hex(decrypt(b));

@@ -1,7 +1,7 @@
 package aist.demo.hibernate.service;
 
 import aist.demo.hibernate.domain.Contour;
-import aist.demo.hibernate.model.ContourModel;
+import aist.demo.hibernate.dto.ContourDto;
 import aist.demo.hibernate.exceptions.NotFoundException;
 import aist.demo.hibernate.converter.ContourConverter;
 import aist.demo.hibernate.repository.ContourRepo;
@@ -26,28 +26,28 @@ public class ContourService {
         this.contourValidator = contourValidator;
     }
 
-    public ContourModel find(Long id) {
+    public ContourDto find(Long id) {
         Contour contour = contourRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("There is no Contour by id: " + id));
         return contourConverter.convert(contour);
     }
 
-    public Set<ContourModel> findAll() {
+    public Set<ContourDto> findAll() {
         return contourRepo.findAll().stream()
                 .map(contourConverter::convert)
                 .collect(Collectors.toSet());
     }
 
-    public ContourModel save(ContourModel contourModel) {
-        contourValidator.forSave(contourModel);
-        Contour contour = contourConverter.convert(contourModel);
+    public ContourDto save(ContourDto contourDto) {
+        contourValidator.forSave(contourDto);
+        Contour contour = contourConverter.convert(contourDto);
         Contour savedContour = contourRepo.save(contour);
         return contourConverter.convert(savedContour);
     }
 
-    public Long update(ContourModel contourModel) {
-        contourValidator.forUpdate(contourModel);
-        Contour contour = contourConverter.convert(contourModel);
+    public Long update(ContourDto contourDto) {
+        contourValidator.forUpdate(contourDto);
+        Contour contour = contourConverter.convert(contourDto);
         return contourRepo.save(contour).getId();
     }
 

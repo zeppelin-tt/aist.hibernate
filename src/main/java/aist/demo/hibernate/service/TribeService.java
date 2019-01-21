@@ -1,7 +1,7 @@
 package aist.demo.hibernate.service;
 
 import aist.demo.hibernate.domain.Tribe;
-import aist.demo.hibernate.model.TribeModel;
+import aist.demo.hibernate.dto.TribeDto;
 import aist.demo.hibernate.exceptions.NotFoundException;
 import aist.demo.hibernate.converter.TribeConverter;
 import aist.demo.hibernate.repository.TribeRepo;
@@ -26,29 +26,29 @@ public class TribeService {
         this.tribeValidator = tribeValidator;
     }
 
-    public TribeModel find(Long id) {
+    public TribeDto find(Long id) {
         Tribe stand = tribeRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("There is no Tribe by id: " + id));
         return tribeConverter.convert(stand);
     }
 
-    public Set<TribeModel> findAll() {
+    public Set<TribeDto> findAll() {
         return tribeRepo.findAll().stream()
                 .map(tribeConverter::convert)
                 .collect(Collectors.toSet());
     }
 
     // TODO: 19.01.2019  обработка sessionId. Во всем классе
-    public TribeModel save(String sessionId, TribeModel tribeModel) {
-        tribeValidator.forSave(tribeModel);
-        Tribe tribe = tribeConverter.convert(tribeModel);
+    public TribeDto save(String sessionId, TribeDto tribeDto) {
+        tribeValidator.forSave(tribeDto);
+        Tribe tribe = tribeConverter.convert(tribeDto);
         Tribe savedStand = tribeRepo.save(tribe);
         return tribeConverter.convert(savedStand);
     }
 
-    public Long update(String sessionId, TribeModel tribeModel) {
-        tribeValidator.forUpdate(tribeModel);
-        Tribe tribe = tribeConverter.convert(tribeModel);
+    public Long update(String sessionId, TribeDto tribeDto) {
+        tribeValidator.forUpdate(tribeDto);
+        Tribe tribe = tribeConverter.convert(tribeDto);
         return tribeRepo.save(tribe).getId();
     }
 

@@ -1,11 +1,11 @@
-package aist.demo.hibernate.model;
+package aist.demo.hibernate.dto;
 
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
-public class UserModel {
+public class UserDto {
 
     private Long id;
     private String login;

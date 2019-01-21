@@ -1,7 +1,7 @@
 package aist.demo.hibernate.service;
 
 import aist.demo.hibernate.domain.User;
-import aist.demo.hibernate.model.UserModel;
+import aist.demo.hibernate.dto.UserDto;
 import aist.demo.hibernate.exceptions.ServerErrorException;
 import aist.demo.hibernate.converter.UserConverter;
 import aist.demo.hibernate.repository.UserRepo;
@@ -47,12 +47,12 @@ public class UserService {
     }
 
     @Deprecated
-    public void setToken(UserModel model) {
+    public void setToken(UserDto model) {
         userValidator.loginForToken(model);
         try {
             // TODO: 19.01.2019 всякие такие штуки надо менять на спринговые, я думаю... Не стал заморачиваться, вроде Костя этим занимается.
             userValidator.passwordVerification(model);
-            Integer token = generateToken();
+            String token = generateToken();
             while (userRepo.existsByToken(token)) {
                 token = generateToken();
             }
@@ -64,7 +64,7 @@ public class UserService {
 
     @Deprecated
     // TODO: 19.01.2019 пока возвращается только id в модели. А нужно ли что-то еще?..
-    public UserModel registerUser(UserModel model) {
+    public UserDto registerUser(UserDto model) {
         userValidator.loginForRegistration(model);
         User savedUser = null;
         try {
@@ -75,13 +75,13 @@ public class UserService {
         } catch (Exception e) {
             throw  new ServerErrorException("Неизвестная ошибка сервера");
         }
-        UserModel onlyId = new UserModel();
+        UserDto onlyId = new UserDto();
         onlyId.setId(savedUser.getId());
         return onlyId;
     }
 
-    private static int generateToken() {
-        return new SecureRandom().nextInt(100000);
+    private String generateToken() {
+        return String.valueOf(new SecureRandom().nextInt(100000));
     }
 
 }

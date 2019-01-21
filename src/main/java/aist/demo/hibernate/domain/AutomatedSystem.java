@@ -10,6 +10,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Table(name = "automated_systems")
+// TODO: 20.01.2019 по-хорошему бы реализовать контроллер...
 public class AutomatedSystem {
 
     @Id

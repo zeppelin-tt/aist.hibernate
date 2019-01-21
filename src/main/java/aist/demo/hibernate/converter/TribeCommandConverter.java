@@ -2,10 +2,8 @@ package aist.demo.hibernate.converter;
 
 import aist.demo.hibernate.annotate.Converter;
 import aist.demo.hibernate.domain.TribeCommand;
-import aist.demo.hibernate.model.TribeCommandModel;
-import aist.demo.hibernate.repository.TribeCommandRepo;
+import aist.demo.hibernate.dto.TribeCommandDto;
 import aist.demo.hibernate.repository.TribeRepo;
-import aist.demo.hibernate.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
@@ -21,21 +19,21 @@ public class TribeCommandConverter {
         this.tribeRepo = tribeRepo;
     }
 
-    public TribeCommand convert(TribeCommandModel model) {
+    public TribeCommand convert(TribeCommandDto model) {
         TribeCommand command = new TribeCommand(model.getName());
         command.setId(model.getId());
         command.setTribe(tribeRepo.getOne(model.getTribeId()));
         return command;
     }
 
-    public TribeCommandModel convert(TribeCommand command) {
-        TribeCommandModel model = new TribeCommandModel(command.getName());
+    public TribeCommandDto convert(TribeCommand command) {
+        TribeCommandDto model = new TribeCommandDto(command.getName());
         model.setId(command.getId());
         model.setTribeId(command.getTribe().getId());
         return model;
     }
 
-    public Set<TribeCommandModel> convertSet(Set<TribeCommand> commands) {
+    public Set<TribeCommandDto> convertSet(Set<TribeCommand> commands) {
         return commands
                 .stream()
                 .map(this::convert)

@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @TypeDefs({@TypeDef(name = "JsonbType", typeClass = JsonbType.class)})
-@Table(name = "Chains")
+@Table(name = "chains")
 public class Chain {
 
     @Id

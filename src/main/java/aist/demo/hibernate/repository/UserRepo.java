@@ -7,17 +7,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
 
     boolean existsByLogin(String login);
 
-    boolean existsByToken(Integer token);
+    boolean existsByToken(String token);
 
-    User findOneByLogin(String login);
+    Set<User> findByLogin(String login);
+
+    Set<User> findByToken(String token);
 
     @Modifying
     @Query("UPDATE users u SET u.token = :token WHERE u.login = :login")
-    int updateTokenByLogin(@Param("token") Integer token, @Param("token") String login);
+    int updateTokenByLogin(@Param("token") String token, @Param("token") String login);
 
 }

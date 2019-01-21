@@ -1,7 +1,7 @@
 package aist.demo.hibernate.validator;
 
 import aist.demo.hibernate.annotate.Validator;
-import aist.demo.hibernate.model.TribeModel;
+import aist.demo.hibernate.dto.TribeDto;
 import aist.demo.hibernate.exceptions.AistBaseException;
 import aist.demo.hibernate.exceptions.ConflictException;
 import aist.demo.hibernate.exceptions.NotFoundException;
@@ -24,32 +24,32 @@ public class TribeValidator {
         this.commandRepo = commandRepo;
     }
 
-    public TribeModel forSave(TribeModel model) {
+    public TribeDto forSave(TribeDto model) {
         if (model.getId() != null) {
             throw new AistBaseException("Трайб для сохранения имеет id");
         }
         if (tribeRepo.existsByName(model.getName())) {
             throw new ConflictException("Трайб с таким именем уже существует");
         }
-//        validateUsers(model);
+//        validateUsers(dto);
         return model;
     }
 
-    public TribeModel forUpdate(TribeModel model) {
+    public TribeDto forUpdate(TribeDto model) {
         if (model.getId() == null) {
             throw new AistBaseException("Трайб для сохранения не имеет id");
         }
         if (!tribeRepo.existsById(model.getId())) {
             throw new NotFoundException("Id нет в базе: " + model.getId());
         }
-//        validateUsers(model);
-//        validateTribeCommands(model);
+//        validateUsers(dto);
+//        validateTribeCommands(dto);
         return model;
     }
 
 //    // TODO: 19.01.2019 дубли... может дженериками?
-//    private void validateUsers(TribeModel model) {
-//        Set<Long> userIdSet = model.getUserIdSet();
+//    private void validateUsers(TribeDto dto) {
+//        Set<Long> userIdSet = dto.getUserIdSet();
 //        if (userIdSet != null && !userIdSet.isEmpty()) {
 //            Set<User> dbUsers = new HashSet<>(userRepo.findAllById(userIdSet));
 //            if(dbUsers.size() != userIdSet.size()) {
@@ -59,8 +59,8 @@ public class TribeValidator {
 //    }
 
 //    // TODO: 19.01.2019 кажется, это лишнее... мы, окажывается, не можем апдейтить из Ентитти другие значения в других энтити. Собственно, имеет смысл))))Тогда и передавать их с фронта не имеет смысла...
-//    private void validateTribeCommands(TribeModel model) {
-//        Set<Long> tribeCommandIdSet = model.getTribeCommandIdSet();
+//    private void validateTribeCommands(TribeDto dto) {
+//        Set<Long> tribeCommandIdSet = dto.getTribeCommandIdSet();
 //        if (tribeCommandIdSet != null && !tribeCommandIdSet.isEmpty()) {
 //            Set<TribeCommand> dbTribeCommands = new HashSet<>(commandRepo.findAllById(tribeCommandIdSet));
 //            if(dbTribeCommands.size() != tribeCommandIdSet.size()) {

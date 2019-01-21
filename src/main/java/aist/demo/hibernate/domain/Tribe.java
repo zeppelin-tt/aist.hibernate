@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Table(name = "tribes")
 public class Tribe {
 
     @Id
@@ -24,7 +25,7 @@ public class Tribe {
     private String name;
 
     @OneToMany(mappedBy = "tribe", fetch = FetchType.LAZY)
-    private Set<TribeCommand> tribeCommandSet;
+    private Set<TribeCommand> tribeCommands;
 
     @OneToMany(mappedBy = "tribe", fetch = FetchType.LAZY)
     private Set<User> users;

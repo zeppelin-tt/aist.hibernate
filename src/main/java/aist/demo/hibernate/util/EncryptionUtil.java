@@ -120,7 +120,6 @@ public class EncryptionUtil {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE))) {
             RSAPublicKey publicKey = (RSAPublicKey) inputStream.readObject();
             byte[] bytes = publicKey.getModulus().toByteArray();
-
             return bytesToHexString(bytes);
         }
 

@@ -1,4 +1,4 @@
-package aist.demo.hibernate.model;
+package aist.demo.hibernate.dto;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -6,7 +6,7 @@ import lombok.NonNull;
 import java.util.Set;
 
 @Data
-public class ContourModel {
+public class ContourDto {
 
     private Long id;
     @NonNull

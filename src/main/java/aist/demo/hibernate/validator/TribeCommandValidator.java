@@ -1,11 +1,10 @@
 package aist.demo.hibernate.validator;
 
 import aist.demo.hibernate.annotate.Validator;
-import aist.demo.hibernate.model.TribeCommandModel;
+import aist.demo.hibernate.dto.TribeCommandDto;
 import aist.demo.hibernate.exceptions.AistBaseException;
 import aist.demo.hibernate.exceptions.ConflictException;
 import aist.demo.hibernate.exceptions.NotFoundException;
-import aist.demo.hibernate.converter.TribeCommandConverter;
 import aist.demo.hibernate.repository.TribeCommandRepo;
 import aist.demo.hibernate.repository.TribeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class TribeCommandValidator {
         this.commandRepo = commandRepo;
     }
 
-    public TribeCommandModel forSave(TribeCommandModel model) {
+    public TribeCommandDto forSave(TribeCommandDto model) {
         if (model.getId() != null) {
             throw new AistBaseException("Команда трайба для сохранения имеет id");
         }
@@ -38,7 +37,7 @@ public class TribeCommandValidator {
         return model;
     }
 
-    public TribeCommandModel forUpdate(TribeCommandModel model) {
+    public TribeCommandDto forUpdate(TribeCommandDto model) {
         if (model.getId() == null) {
             throw new AistBaseException("Команда трайба для редактирования не имеет id");
         }

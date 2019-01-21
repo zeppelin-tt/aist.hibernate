@@ -2,7 +2,7 @@ package aist.demo.hibernate.validator;
 
 import aist.demo.hibernate.annotate.Validator;
 import aist.demo.hibernate.domain.Chain;
-import aist.demo.hibernate.model.ContourModel;
+import aist.demo.hibernate.dto.ContourDto;
 import aist.demo.hibernate.exceptions.AistBaseException;
 import aist.demo.hibernate.exceptions.ConflictException;
 import aist.demo.hibernate.exceptions.ConsistentModelException;
@@ -26,7 +26,7 @@ public class ContourValidator {
         this.chainRepo = chainRepo;
     }
 
-    public ContourModel forSave(ContourModel model) {
+    public ContourDto forSave(ContourDto model) {
         if (model.getId() != null) {
             throw new AistBaseException("Контур для сохранения имеет id");
         }
@@ -37,7 +37,7 @@ public class ContourValidator {
         return model;
     }
 
-    public ContourModel forUpdate(ContourModel model) {
+    public ContourDto forUpdate(ContourDto model) {
         if (model.getId() == null) {
             throw new AistBaseException("Контур для сохранения не имеет id");
         }
@@ -49,7 +49,7 @@ public class ContourValidator {
     }
 
     // TODO: 19.01.2019 наверное, надо будет вынести в валидатор цепочек. Чтобы не дублировать...
-    private void validateChains(ContourModel model) {
+    private void validateChains(ContourDto model) {
         Set<Long> chainIdSet = model.getChainIdSet();
         if (chainIdSet != null && !chainIdSet.isEmpty()) {
             Set<Chain> dbChains = new HashSet<>(chainRepo.findAllById(chainIdSet));

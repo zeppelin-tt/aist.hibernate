@@ -1,10 +1,10 @@
-package aist.demo.hibernate.model;
+package aist.demo.hibernate.dto;
 
 import lombok.Data;
 import org.springframework.lang.NonNull;
 
 @Data
-public class TribeCommandModel {
+public class TribeCommandDto {
 
     private Long id;
 

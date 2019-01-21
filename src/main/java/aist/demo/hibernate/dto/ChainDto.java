@@ -1,4 +1,4 @@
-package aist.demo.hibernate.model;
+package aist.demo.hibernate.dto;
 
 import aist.demo.hibernate.domain.Contour;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class ChainTemplateModel {
+public class ChainDto {
 
     @NonNull
     private Long id;

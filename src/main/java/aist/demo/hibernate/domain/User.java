@@ -23,7 +23,7 @@ public class User {
 
     private String password;
 
-    private Integer token;
+    private String token;
 
     @Email(message = "Email некорректен")
     private String email;

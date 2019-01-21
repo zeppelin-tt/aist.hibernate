@@ -1,7 +1,7 @@
 package aist.demo.hibernate.service;
 
 import aist.demo.hibernate.domain.TribeCommand;
-import aist.demo.hibernate.model.TribeCommandModel;
+import aist.demo.hibernate.dto.TribeCommandDto;
 import aist.demo.hibernate.exceptions.NotFoundException;
 import aist.demo.hibernate.converter.TribeCommandConverter;
 import aist.demo.hibernate.repository.TribeCommandRepo;
@@ -26,32 +26,32 @@ public class TribeCommandService {
         this.commandValidator = commandValidator;
     }
 
-    public TribeCommandModel find(Long id) {
+    public TribeCommandDto find(Long id) {
         TribeCommand command = commandRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("There is no Contour by id: " + id));
         return commandConverter.convert(command);
     }
 
-    public Set<TribeCommandModel> findByTribeId(Long tribeId) {
+    public Set<TribeCommandDto> findByTribeId(Long tribeId) {
         Set<TribeCommand> commands = commandRepo.findByTribeId(tribeId);
         return commandConverter.convertSet(commands);
     }
 
-    public Set<TribeCommandModel> findAll() {
+    public Set<TribeCommandDto> findAll() {
         return commandRepo.findAll()
                 .stream()
                 .map(commandConverter::convert)
                 .collect(Collectors.toSet());
     }
 
-    public TribeCommandModel save(String sessionId, TribeCommandModel commandModel) {
+    public TribeCommandDto save(String sessionId, TribeCommandDto commandModel) {
         commandValidator.forSave(commandModel);
         TribeCommand command = commandConverter.convert(commandModel);
         TribeCommand savedCommand = commandRepo.save(command);
         return commandConverter.convert(savedCommand);
     }
 
-    public Long update(String sessionId, TribeCommandModel commandModel) {
+    public Long update(String sessionId, TribeCommandDto commandModel) {
         commandValidator.forUpdate(commandModel);
         TribeCommand command = commandConverter.convert(commandModel);
         return commandRepo.save(command).getId();

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Table(name = "tribe_commands")
 public class TribeCommand {
 
     @Id
