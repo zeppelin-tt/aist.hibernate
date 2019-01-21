@@ -24,12 +24,12 @@ public class ContourController {
         return service.find(id);
     }
 
-    @PostMapping(path = "update")
+    @PutMapping
     public Long update(@RequestBody ContourDto contourDto) {
         return service.update(contourDto);
     }
 
-    @PostMapping(path = "create")
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public ContourDto save(@RequestBody ContourDto contourDto) {
         return service.save(contourDto);

@@ -44,16 +44,16 @@ public class TribeCommandService {
                 .collect(Collectors.toSet());
     }
 
-    public TribeCommandDto save(String sessionId, TribeCommandDto commandModel) {
-        commandValidator.forSave(commandModel);
-        TribeCommand command = commandConverter.convert(commandModel);
+    public TribeCommandDto save(String sessionId, TribeCommandDto commandDto) {
+        commandValidator.forSave(commandDto);
+        TribeCommand command = commandConverter.convert(commandDto);
         TribeCommand savedCommand = commandRepo.save(command);
         return commandConverter.convert(savedCommand);
     }
 
-    public Long update(String sessionId, TribeCommandDto commandModel) {
-        commandValidator.forUpdate(commandModel);
-        TribeCommand command = commandConverter.convert(commandModel);
+    public Long update(String sessionId, TribeCommandDto commandDto) {
+        commandValidator.forUpdate(commandDto);
+        TribeCommand command = commandConverter.convert(commandDto);
         return commandRepo.save(command).getId();
     }
 

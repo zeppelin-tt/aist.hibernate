@@ -21,7 +21,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     Set<User> findByToken(String token);
 
     @Modifying
-    @Query("UPDATE users u SET u.token = :token WHERE u.login = :login")
+    @Query("UPDATE User u SET u.token = :token WHERE u.login = :login")
     int updateTokenByLogin(@Param("token") String token, @Param("token") String login);
 
 }

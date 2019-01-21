@@ -19,18 +19,18 @@ public class TribeCommandConverter {
         this.tribeRepo = tribeRepo;
     }
 
-    public TribeCommand convert(TribeCommandDto model) {
-        TribeCommand command = new TribeCommand(model.getName());
-        command.setId(model.getId());
-        command.setTribe(tribeRepo.getOne(model.getTribeId()));
+    public TribeCommand convert(TribeCommandDto dto) {
+        TribeCommand command = new TribeCommand(dto.getName());
+        command.setId(dto.getId());
+        command.setTribe(tribeRepo.getOne(dto.getTribeId()));
         return command;
     }
 
     public TribeCommandDto convert(TribeCommand command) {
-        TribeCommandDto model = new TribeCommandDto(command.getName());
-        model.setId(command.getId());
-        model.setTribeId(command.getTribe().getId());
-        return model;
+        TribeCommandDto dto = new TribeCommandDto(command.getName());
+        dto.setId(command.getId());
+        dto.setTribeId(command.getTribe().getId());
+        return dto;
     }
 
     public Set<TribeCommandDto> convertSet(Set<TribeCommand> commands) {

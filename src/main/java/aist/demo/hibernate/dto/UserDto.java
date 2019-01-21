@@ -10,7 +10,7 @@ public class UserDto {
     private Long id;
     private String login;
     private String password;
-    private Integer token;
+    private String token;
     private String email;
     private Long tribeId;
     private Long commandTribeId;

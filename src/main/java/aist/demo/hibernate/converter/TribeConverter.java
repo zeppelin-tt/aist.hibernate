@@ -26,13 +26,13 @@ public class TribeConverter {
         this.tribeCommandRepo = tribeCommandRepo;
     }
 
-    public Tribe convert(TribeDto model) {
-        Tribe tribe = new Tribe(model.getName());
-        tribe.setId(model.getId());
-        Set<Long> userIdSet = model.getUserIdSet();
-        Set<Long> tribeCommandIdSet = model.getTribeCommandIdSet();
+    public Tribe convert(TribeDto dto) {
+        Tribe tribe = new Tribe(dto.getName());
+        tribe.setId(dto.getId());
+        Set<Long> userIdSet = dto.getUserIdSet();
+        Set<Long> tribeCommandIdSet = dto.getTribeCommandIdSet();
         Set<User> users = null;
-        if (model.getUserIdSet() != null) {
+        if (dto.getUserIdSet() != null) {
             users = new HashSet<>(userRepo.findAllById(userIdSet));
         }
         tribe.setUsers(users);
@@ -46,23 +46,23 @@ public class TribeConverter {
 
     // TODO: 19.01.2019 как-то криво получилось... рад любым советам и вмешательствам..)
     public TribeDto convert(Tribe tribe) {
-        TribeDto model = new TribeDto(tribe.getName());
+        TribeDto dto = new TribeDto(tribe.getName());
         Set<Long> userIdSet = tribe.getUsers() == null ?
                 Collections.emptySet() :
                 tribe.getUsers()
                         .stream()
                         .map(User::getId)
                         .collect(Collectors.toSet());
-        model.setUserIdSet(userIdSet);
+        dto.setUserIdSet(userIdSet);
         Set<Long> tribeCommandIdSet = tribe.getTribeCommands() == null ?
                 Collections.emptySet() :
                 tribe.getTribeCommands()
                         .stream()
                         .map(TribeCommand::getId)
                         .collect(Collectors.toSet());
-        model.setTribeCommandIdSet(tribeCommandIdSet);
-        model.setId(tribe.getId());
-        return model;
+        dto.setTribeCommandIdSet(tribeCommandIdSet);
+        dto.setId(tribe.getId());
+        return dto;
     }
 
 }

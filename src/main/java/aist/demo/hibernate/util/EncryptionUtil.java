@@ -14,13 +14,6 @@ public class EncryptionUtil {
     private static final String PRIVATE_KEY_FILE = "D:/keys/private.key";
     private static final String PUBLIC_KEY_FILE = "D:/keys/public.key";
 
-    /**
-     * Generate key which contains a pair of private and public key using 1024
-     * bytes. Store the set of keys in Prvate.key and Public.key files.
-     *
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
-     */
     public static void generateKey() throws NoSuchAlgorithmException, IOException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(1024, new SecureRandom());
@@ -30,13 +23,6 @@ public class EncryptionUtil {
         writeToFile(PRIVATE_KEY_FILE, key.getPrivate());
     }
 
-    /**
-     * Write key to specified file
-     *
-     * @param fileName
-     * @param key
-     * @throws IOException
-     */
     private static void writeToFile(String fileName, Object key) throws IOException {
         File privateKeyFile = new File(fileName);
 
@@ -52,12 +38,6 @@ public class EncryptionUtil {
         }
     }
 
-    /**
-     * Convert bytes array to Hex string
-     *
-     * @param bytes bytes array
-     * @return hex string
-     */
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte aByte : bytes) {
@@ -68,12 +48,6 @@ public class EncryptionUtil {
         return sb.toString();
     }
 
-    /**
-     * Convert hex string to bytes array
-     *
-     * @param data hex string with data
-     * @return bytes array
-     */
     public static byte[] hexStringToBytes(String data) {
         int j = 0;
         byte[] results = new byte[data.length() / 2];
@@ -85,13 +59,6 @@ public class EncryptionUtil {
         return results;
     }
 
-    /**
-     * Decrypt text using private key
-     *
-     * @param text :encrypted text
-     * @return plain text
-     * @throws Exception
-     */
     public static String decrypt(byte[] text) throws Exception {
         byte[] decryptedText;
         try {
@@ -109,13 +76,6 @@ public class EncryptionUtil {
         return new String(decryptedText);
     }
 
-    /**
-     * Get modulus from public key
-     *
-     * @return Hex String with modulus value
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
     public static String getModulus() throws IOException, ClassNotFoundException {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE))) {
             RSAPublicKey publicKey = (RSAPublicKey) inputStream.readObject();

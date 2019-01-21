@@ -22,25 +22,25 @@ public class ContourConverter {
         this.chainRepo = chainRepo;
     }
 
-    public Contour convert(ContourDto model) {
-        Contour contour = new Contour(model.getCode(), model.getName());
-        Set<Long> chainIdSet = model.getChainIdSet();
+    public Contour convert(ContourDto dto) {
+        Contour contour = new Contour(dto.getCode(), dto.getName());
+        Set<Long> chainIdSet = dto.getChainIdSet();
         List<Chain> chainsById = chainRepo.findAllById(chainIdSet);
         contour.setChains(new HashSet<>(chainsById));
-        contour.setId(model.getId());
-        contour.setDescription(model.getDescription());
+        contour.setId(dto.getId());
+        contour.setDescription(dto.getDescription());
         return contour;
     }
 
     public ContourDto convert(Contour contour) {
-        ContourDto model = new ContourDto(contour.getCode(), contour.getName());
+        ContourDto dto = new ContourDto(contour.getCode(), contour.getName());
         Set<Long> chainIdSet = contour.getChains()
                 .stream()
                 .map(Chain::getId)
                 .collect(Collectors.toSet());
-        model.setChainIdSet(chainIdSet);
-        model.setDescription(contour.getDescription());
-        return model;
+        dto.setChainIdSet(chainIdSet);
+        dto.setDescription(contour.getDescription());
+        return dto;
     }
 
 }

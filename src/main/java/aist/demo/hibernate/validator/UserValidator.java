@@ -24,8 +24,8 @@ public class UserValidator {
         this.userRepo = userRepo;
     }
 
-    public void loginForToken(UserDto model) {
-        String login = checkConsistent(model);
+    public void loginForToken(UserDto dto) {
+        String login = checkConsistent(dto);
         if (!userRepo.existsByLogin(login)) {
             throw new NotFoundException("Пользователь с логином " + login + " не найден");
         }
@@ -38,12 +38,12 @@ public class UserValidator {
         }
     }
 
-    public void passwordVerification(UserDto model) throws Exception {
-        byte[] b = hexStringToBytes(model.getPassword());
+    public void passwordVerification(UserDto dto) throws Exception {
+        byte[] b = hexStringToBytes(dto.getPassword());
         String decryptedPass = DigestUtils.md5Hex(decrypt(b));
-        Set<User> users = userRepo.findByLogin(model.getLogin());
+        Set<User> users = userRepo.findByLogin(dto.getLogin());
         if (users.isEmpty()){
-            throw new NotFoundException("Пользователь с логином " + model.getLogin() + " не найден");
+            throw new NotFoundException("Пользователь с логином " + dto.getLogin() + " не найден");
         }
         String curPass = users.iterator().next().getPassword();
         if (!decryptedPass.equals(curPass)) {

@@ -22,33 +22,31 @@ public class UserConverter {
 
     private final GroupRepo groupRepo;
     private final ChainRepo chainRepo;
-    private final UserValidator userValidator;
 
     @Autowired
-    public UserConverter(GroupRepo groupRepo, ChainRepo chainRepo, UserValidator userValidator) {
+    public UserConverter(GroupRepo groupRepo, ChainRepo chainRepo) {
         this.groupRepo = groupRepo;
         this.chainRepo = chainRepo;
-        this.userValidator = userValidator;
     }
 
     // для сохранения нового.
-    public User convert(UserDto model) throws Exception {
+    public User convert(UserDto dto) throws Exception {
         User user = new User();
-        byte[] b = hexStringToBytes(model.getPassword());
+        byte[] b = hexStringToBytes(dto.getPassword());
         String decryptedPass = DigestUtils.md5Hex(decrypt(b));
         user.setPassword(decryptedPass);
-        user.setLogin(model.getLogin());
-        user.setId(model.getId());
-        user.setEmail(model.getEmail());
-        user.setToken(model.getToken());
+        user.setLogin(dto.getLogin());
+        user.setId(dto.getId());
+        user.setEmail(dto.getEmail());
+        user.setToken(dto.getToken());
         Set<Group> groups = null;
-        if (model.getGroups() != null) {
-            groups = new HashSet<>(groupRepo.findAllById(model.getGroups()));
+        if (dto.getGroups() != null) {
+            groups = new HashSet<>(groupRepo.findAllById(dto.getGroups()));
         }
         user.setGroups(groups);
         Set<Chain> chains = null;
-        if (model.getChains() != null) {
-            chains = new HashSet<>(chainRepo.findAllById(model.getChains()));
+        if (dto.getChains() != null) {
+            chains = new HashSet<>(chainRepo.findAllById(dto.getChains()));
         }
         user.setChains(chains);
         return user;

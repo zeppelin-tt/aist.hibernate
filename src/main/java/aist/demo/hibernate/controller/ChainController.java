@@ -13,12 +13,12 @@ import java.util.List;
 @ApiController("contour") // was stands
 public class ChainController {
 
-//    private final ChainService service;
-//
-//    @Autowired
-//    public ChainController(ChainService service) {
-//        this.service = service;
-//    }
+    private final ChainService service;
+
+    @Autowired
+    public ChainController(ChainService service) {
+        this.service = service;
+    }
 //
 //    @GetMapping("{id:\\d+}")
 //    public ResponseEntity get(@RequestHeader(value = AuthUtils.TOKEN_PARAM_NAME, required = false) String sessionID,
