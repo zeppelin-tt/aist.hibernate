@@ -1,5 +1,7 @@
 package aist.demo.util;
 
+import org.springframework.core.io.ClassPathResource;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -11,8 +13,8 @@ import java.security.interfaces.RSAPublicKey;
 @Deprecated
 public class EncryptionUtil {
 
-    private static final String PRIVATE_KEY_FILE = "D:/keys/private.key";
-    private static final String PUBLIC_KEY_FILE = "D:/keys/public.key";
+    private static final String PRIVATE_KEY_FILE = "privatKey.txt";
+    private static final String PUBLIC_KEY_FILE = "publicKey.txt";
 
     public static void generateKey() throws NoSuchAlgorithmException, IOException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -64,7 +66,9 @@ public class EncryptionUtil {
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             ObjectInputStream inputStream;
-            inputStream = new ObjectInputStream(new FileInputStream(PRIVATE_KEY_FILE));
+            ClassPathResource resource = new ClassPathResource(PRIVATE_KEY_FILE);
+            InputStream stream = resource.getInputStream();
+            inputStream = ((ObjectInputStream) stream);
             PrivateKey privateKey = (PrivateKey) inputStream.readObject();
 
             cipher.init(Cipher.DECRYPT_MODE, privateKey);

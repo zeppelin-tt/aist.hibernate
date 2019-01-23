@@ -1,9 +1,9 @@
 package aist.demo.converter;
 
 import aist.demo.annotate.Converter;
-import aist.demo.domain.*;
+import aist.demo.domain.Chain;
+import aist.demo.domain.Group;
 import aist.demo.dto.GroupDto;
-import aist.demo.dto.TribeDto;
 import aist.demo.repository.ChainRepo;
 import aist.demo.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;

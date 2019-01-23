@@ -1,13 +1,9 @@
 package aist.demo.service;
 
 import aist.demo.converter.GroupConverter;
-import aist.demo.domain.Contour;
 import aist.demo.domain.Group;
-import aist.demo.dto.ChainDto;
-import aist.demo.dto.ContourDto;
 import aist.demo.dto.GroupDto;
 import aist.demo.repository.GroupRepo;
-import aist.demo.repository.UserRepo;
 import aist.demo.validator.GroupValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -7,9 +7,7 @@ import org.hibernate.usertype.DynamicParameterizedType;
 
 import java.util.Properties;
 
-public class IntArrayType
-        extends AbstractSingleColumnStandardBasicType<int[]>
-        implements DynamicParameterizedType {
+public class IntArrayType extends AbstractSingleColumnStandardBasicType<int[]> implements DynamicParameterizedType {
 
     public IntArrayType() {
         super(ArraySqlTypeDescriptor.INSTANCE, IntArrayTypeDescriptor.INSTANCE);

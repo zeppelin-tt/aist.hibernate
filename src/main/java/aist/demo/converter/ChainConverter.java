@@ -1,19 +1,19 @@
 package aist.demo.converter;
 
 import aist.demo.annotate.Converter;
-import aist.demo.domain.AutomatedSystem;
-import aist.demo.domain.Chain;
-import aist.demo.domain.Group;
+import aist.demo.domain.*;
 import aist.demo.dto.ChainDto;
 import aist.demo.repository.AutomatedSystemRepo;
 import aist.demo.repository.ContourRepo;
 import aist.demo.repository.GroupRepo;
 import aist.demo.repository.UserRepo;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Converter
@@ -36,12 +36,27 @@ public class ChainConverter {
         Chain chain = new Chain();
         chain.setId(dto.getId());
         chain.setName(dto.getName());
-        chain.setForm(new Gson().toJsonTree(dto.getForm()));
-        chain.setContour(dto.getContourId() == null ? null : contourRepo.getOne(dto.getContourId()));
-        chain.setSystems(dto.getSystems() == null ? Collections.emptySet() : new HashSet<>(systemRepo.findAllById(dto.getSystems())));
+        JsonElement form = dto.getForm() == null ?
+                new Gson().toJsonTree("{}") : // TODO: 23.01.2019 как-то не очень красиво. Разобраться.
+                new Gson().toJsonTree(dto.getForm());
+        chain.setForm(form);
+        Contour contour = dto.getContourId() == null ?
+                null :
+                contourRepo.getOne(dto.getContourId());
+        chain.setContour(contour);
+        Set<AutomatedSystem> systems = dto.getSystems() == null ?
+                Collections.emptySet() :
+                new HashSet<>(systemRepo.findAllById(dto.getSystems()));
+        chain.setSystems(systems);
         chain.setTestIdOrder(dto.getTestIdOrder());
-        chain.setUser(dto.getUserId() == null ? null : userRepo.getOne(dto.getUserId()));
-        chain.setGroups(dto.getGroupIdSet() == null ? Collections.emptySet() : new HashSet<>(groupRepo.findAllById(dto.getGroupIdSet())));
+        User user = dto.getUserId() == null ?
+                null :
+                userRepo.getOne(dto.getUserId());
+        chain.setUser(user);
+        Set<Group> groups = dto.getGroupIdSet() == null ?
+                Collections.emptySet() :
+                new HashSet<>(groupRepo.findAllById(dto.getGroupIdSet()));
+        chain.setGroups(groups);
         chain.setWithoutForm(dto.isWithoutForm());
         chain.setAverageTimeSec(dto.getAverageTimeSec());
         chain.setAverageTimeByTestsSec(dto.getAverageTimeByTestsSec());
@@ -54,12 +69,20 @@ public class ChainConverter {
         ChainDto dto = new ChainDto();
         dto.setId(chain.getId());
         dto.setName(chain.getName());
-        dto.setForm(chain.getForm().getAsString());
+        dto.setForm(chain.getForm().toString());
         dto.setContourId(chain.getContour().getId());
-        dto.setSystems(chain.getSystems().stream().map(AutomatedSystem::getId).collect(Collectors.toSet()));
+        Set<Long> systemIdSet = chain.getSystems()
+                .stream()
+                .map(AutomatedSystem::getId)
+                .collect(Collectors.toSet());
+        dto.setSystems(systemIdSet);
         dto.setUserId(chain.getUser().getId());
         dto.setTestIdOrder(chain.getTestIdOrder());
-        dto.setGroupIdSet(chain.getGroups().stream().map(Group::getId).collect(Collectors.toSet()));
+        Set<Long> groupIdSet = chain.getGroups()
+                .stream()
+                .map(Group::getId)
+                .collect(Collectors.toSet());
+        dto.setGroupIdSet(groupIdSet);
         dto.setWithoutForm(chain.isWithoutForm());
         dto.setAverageTimeSec(chain.getAverageTimeSec());
         dto.setAverageTimeByTestsSec(chain.getAverageTimeByTestsSec());

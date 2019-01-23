@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 // TODO: 21.01.2019 тут во всем классе добавить штуки с авторизацией и РОЛЕВУЮ модель доступа!
-@ApiController("contour") // was stands
+@ApiController("chain") // was stands
 public class ChainController {
 
     private final ChainService service;

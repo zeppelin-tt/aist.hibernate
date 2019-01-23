@@ -10,14 +10,13 @@ import org.hibernate.annotations.TypeDefs;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@TypeDefs({@TypeDef(name = "JsonbType", typeClass = JsonbType.class), @TypeDef(name = "IntArrayType", typeClass = IntArrayType.class)})
+@TypeDefs({@TypeDef(name = "JsonbType", typeClass = JsonbType.class), @TypeDef(name = "int-array", typeClass = IntArrayType.class)})
 @Table(name = "chains")
 public class Chain {
 
@@ -39,8 +38,9 @@ public class Chain {
     @JoinTable(name = "chain_automated_system", joinColumns = @JoinColumn(name = "chain_id"), inverseJoinColumns = @JoinColumn(name = "automated_system_id"))
     private Set<AutomatedSystem> systems;
 
-    @Type(type = "IntArrayType")
-    private int[] testIdOrder;
+    @Type(type = "int-array")
+    @Column(columnDefinition = "INT ARRAY")
+    private Integer[] testIdOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

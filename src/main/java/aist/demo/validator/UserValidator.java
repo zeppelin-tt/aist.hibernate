@@ -29,8 +29,8 @@ public class UserValidator {
         }
     }
 
-    public void loginForRegistration(UserDto model) {
-        String login = checkConsistent(model);
+    public void loginForRegistration(UserDto dto) {
+        String login = checkConsistent(dto);
         if (userRepo.existsByLogin(login)) {
             throw new NotFoundException("Пользователь с логином " + login + " уже зарегистрирован");
         }
@@ -49,9 +49,9 @@ public class UserValidator {
         }
     }
 
-    private String checkConsistent(UserDto model) {
-        String login = model.getLogin();
-        if (login == null || model.getPassword() == null) {
+    private String checkConsistent(UserDto dto) {
+        String login = dto.getLogin();
+        if (login == null || dto.getPassword() == null) {
             throw new AistBaseException("Ожидается логин и пароль пользователя");
         }
         return login;

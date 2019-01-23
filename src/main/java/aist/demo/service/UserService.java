@@ -48,16 +48,16 @@ public class UserService {
 
     @Deprecated
     @Transactional
-    public void setToken(UserDto model) {
-        userValidator.loginForToken(model);
+    public void setToken(UserDto dto) {
+        userValidator.loginForToken(dto);
         try {
             // TODO: 19.01.2019 всякие такие штуки надо менять на спринговые, я думаю... Не стал заморачиваться, вроде Костя этим занимается.
-            userValidator.passwordVerification(model);
+            userValidator.passwordVerification(dto);
             String token = generateToken();
             while (userRepo.existsByToken(token)) {
                 token = generateToken();
             }
-            userRepo.updateTokenByLogin(token, model.getLogin());
+            userRepo.updateTokenByLogin(token, dto.getLogin());
         } catch (Exception e) {
             throw new ServerErrorException("Неизвестная ошибка сервера");
         }
@@ -66,11 +66,11 @@ public class UserService {
     @Deprecated
     @Transactional
     // TODO: 19.01.2019 пока возвращается только id в модели. А нужно ли что-то еще?..
-    public UserDto registerUser(UserDto model) {
-        userValidator.loginForRegistration(model);
+    public UserDto registerUser(UserDto dto) {
+        userValidator.loginForRegistration(dto);
         User savedUser = null;
         try {
-            User user = userConverter.convert(model);
+            User user = userConverter.convert(dto);
             savedUser = userRepo.save(user);
             // TODO: 19.01.2019 предусмотреть все связи при создании пользователя
 //            connector.update("UPDATE groups SET members = members || '" + login + ",' WHERE name = 'public'");

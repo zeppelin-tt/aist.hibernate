@@ -42,6 +42,12 @@ public class ChainValidator {
         if (dto.getId() != null) {
             throw new AistBaseException("Генератор для сохранения имеет id");
         }
+        if (dto.getContourId() == null) {
+            throw new NotFoundException("Не указан контур цепочки" );
+        }
+        if (dto.getUserId() == null) {
+            throw new NotFoundException("Не указан создатель цепочки" );
+        }
         if (chainRepo.existsByName(dto.getName())) {
             throw new ConflictException("Генератор с таким именем или кодом уже существует");
         }
@@ -79,6 +85,7 @@ public class ChainValidator {
         Set<Long> systemIdSet = dto.getSystems();
         if (systemIdSet != null) {
             if (systemIdSet.isEmpty()) {
+                // TODO: 23.01.2019 переделать логику!
                 throw new AistBaseException("Цепочка должна включать хотя бы одну систему");
             } else {
                 Set<AutomatedSystem> dbAutomatedSystems = new HashSet<>(systemRepo.findAllById(systemIdSet));
@@ -95,7 +102,7 @@ public class ChainValidator {
     }
 
     private void validateTests(ChainDto dto) {
-        int[] testIdOrder = dto.getTestIdOrder();
+        Integer[] testIdOrder = dto.getTestIdOrder();
         if (testIdOrder != null) {
             if (testIdOrder.length == 0) {
                 throw new AistBaseException("Цепочка должна включать хотя бы один тест");
