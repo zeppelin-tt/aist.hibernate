@@ -16,7 +16,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     private String login;
@@ -59,8 +59,5 @@ public class User {
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private Set<Order> ordersCreated;
-
-    @OneToMany(mappedBy = "lockedBy", fetch = FetchType.LAZY)
-    private Set<AccountPool> accountsLocked;
 
 }

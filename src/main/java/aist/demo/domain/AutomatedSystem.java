@@ -15,7 +15,7 @@ import java.util.Set;
 public class AutomatedSystem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @NonNull

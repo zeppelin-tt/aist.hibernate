@@ -21,7 +21,7 @@ import java.util.Set;
 public class ClientDataDictionary {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     // TODO: 24.01.2019 не вижу пока смысла реализовывать здесь связь many to many... хотя, может и стоит...

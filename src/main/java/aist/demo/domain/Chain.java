@@ -23,7 +23,7 @@ import java.util.Set;
 public class Chain {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(unique = true, nullable = false)

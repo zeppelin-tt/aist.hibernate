@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class AccountPool {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,8 +39,8 @@ public class AccountPool {
     private LocalDateTime timeToFree;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "locked_by_user_id")
-    private User lockedBy;
+    @JoinColumn(name = "locked_by_order_id")
+    private Order lockedBy;
 
     @Type(type = "JsonbType")
     private JsonElement filter;

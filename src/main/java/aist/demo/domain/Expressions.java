@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Expressions {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     // TODO: 24.01.2019 также непонятно, следует ли связывать? Не вижу смысла.

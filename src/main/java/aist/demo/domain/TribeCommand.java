@@ -18,7 +18,7 @@ import java.util.Set;
 public class TribeCommand {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @NonNull

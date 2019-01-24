@@ -23,7 +23,7 @@ import java.util.Set;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     // TODO: 24.01.2019 нужен ли он вообще?... Есть такое чувство, что с ним только одни проблемы будут.
@@ -57,5 +57,8 @@ public class Order {
     @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private PtdIntegration ptdIntegration;
+
+    @OneToMany(mappedBy = "lockedBy", fetch = FetchType.LAZY)
+    private Set<AccountPool> accountsLocked;
 
 }

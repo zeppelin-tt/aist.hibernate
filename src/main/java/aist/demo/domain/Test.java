@@ -20,7 +20,7 @@ import java.util.Set;
 public class Test {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @NonNull

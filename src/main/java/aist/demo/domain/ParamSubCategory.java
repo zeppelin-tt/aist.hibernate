@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class ParamSubCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
