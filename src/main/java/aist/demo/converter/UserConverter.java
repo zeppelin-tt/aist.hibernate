@@ -40,7 +40,7 @@ public class UserConverter {
         Set<Group> groups = dto.getGroups() == null ?
                 Collections.emptySet() :
                 new HashSet<>(groupRepo.findAllById(dto.getGroups()));
-        user.setGroups(groups);
+        user.setCreatedGroups(groups);
         Set<Chain> chains = dto.getChains() == null ?
                 Collections.emptySet() :
                 new HashSet<>(chainRepo.findAllById(dto.getChains()));

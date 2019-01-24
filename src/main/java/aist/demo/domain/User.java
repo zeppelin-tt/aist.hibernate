@@ -33,13 +33,34 @@ public class User {
     private Tribe tribe;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "command_tribe_id")
+    @JoinColumn(name = "tribe_command_id")
     private TribeCommand tribeCommand;
 
+    @ManyToMany(mappedBy = "favoriteByUsers", fetch = FetchType.LAZY)
+    private Set<Chain> favoriteChains;
+
     @OneToMany(mappedBy = "createdByUser", fetch = FetchType.LAZY)
-    private Set<Group> groups;
+    private Set<Group> createdGroups;
+
+    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+    private Set<Group> includedInGroups;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Chain> chains;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Test> tests;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Tag> tags;
+
+    @OneToMany(mappedBy = "lockedBy", fetch = FetchType.LAZY)
+    private Set<Order> ordersLocked;
+
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+    private Set<Order> ordersCreated;
+
+    @OneToMany(mappedBy = "lockedBy", fetch = FetchType.LAZY)
+    private Set<AccountPool> accountsLocked;
 
 }

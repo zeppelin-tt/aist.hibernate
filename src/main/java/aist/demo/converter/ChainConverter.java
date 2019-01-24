@@ -37,7 +37,7 @@ public class ChainConverter {
         chain.setId(dto.getId());
         chain.setName(dto.getName());
         JsonElement form = dto.getForm() == null ?
-                new Gson().toJsonTree("{}") : // TODO: 23.01.2019 как-то не очень красиво. Разобраться.
+                new Gson().toJsonTree("[]") : // TODO: 23.01.2019 как-то не очень красиво. Разобраться.
                 new Gson().toJsonTree(dto.getForm());
         chain.setForm(form);
         Contour contour = dto.getContourId() == null ?
@@ -69,7 +69,7 @@ public class ChainConverter {
         ChainDto dto = new ChainDto();
         dto.setId(chain.getId());
         dto.setName(chain.getName());
-        dto.setForm(chain.getForm().toString());
+        dto.setForm(chain.getForm().getAsString());
         dto.setContourId(chain.getContour().getId());
         Set<Long> systemIdSet = chain.getSystems()
                 .stream()

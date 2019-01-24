@@ -27,6 +27,9 @@ public class AutomatedSystem {
     private String name;
 
     @ManyToMany(mappedBy = "systems")
-    private Set<Chain> chainSet;
+    private Set<Chain> chains;
+
+    @OneToMany(mappedBy = "system", fetch = FetchType.LAZY)
+    private Set<AccountPool> accountPoolSet;
 
 }

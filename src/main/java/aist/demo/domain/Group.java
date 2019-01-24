@@ -25,6 +25,10 @@ public class Group {
     @JoinColumn(name = "user_id")
     private User createdByUser;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "groups_users", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> members;
+
     @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     private Set<Chain> chains;
 

@@ -2,9 +2,11 @@ package aist.demo.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,6 +19,17 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String tag;
+    private String name;
+
+    private String value;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tags_tests", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "test_id"))
+    private Set<Test> tests;
+
+    @NonNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

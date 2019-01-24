@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,5 +28,8 @@ public class TribeCommand {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tribe_id")
     private Tribe tribe;
+
+    @OneToMany(mappedBy = "tribeCommand", fetch = FetchType.LAZY)
+    private Set<User> users;
 
 }

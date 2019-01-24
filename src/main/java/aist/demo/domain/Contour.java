@@ -28,4 +28,7 @@ public class Contour {
     @OneToMany(mappedBy = "contour", fetch = FetchType.LAZY) // cascade???
     private Set<Chain> chains;
 
+    @OneToMany(mappedBy = "contour", fetch = FetchType.LAZY)
+    private Set<AccountPool> accountPoolSet;
+
 }
