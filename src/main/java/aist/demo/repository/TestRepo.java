@@ -11,6 +11,8 @@ import java.util.Set;
 @Repository
 public interface TestRepo extends JpaRepository<Test, Long> {
 
+    boolean existsByName(String name);
+
 //    @Query(value = "SELECT c.id FROM tests t join chains c ON t.id = ANY(c.test_id_order) WHERE t.id = :testId", nativeQuery = true)
 //    Set<Long> findChainsByTestId(@Param("token") Long testId);
 

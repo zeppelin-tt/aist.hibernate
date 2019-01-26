@@ -10,6 +10,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +22,7 @@ import java.util.Set;
 public class ClientDataDictionary {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // TODO: 24.01.2019 не вижу пока смысла реализовывать здесь связь many to many... хотя, может и стоит...
@@ -36,6 +37,6 @@ public class ClientDataDictionary {
     private JsonElement defaultValues;
 
     @OneToMany(mappedBy = "clientData", fetch = FetchType.LAZY)
-    private Set<PtdIntegration> ptdIntegrationOrders;
+    private Set<PtdIntegration> ptdIntegrationOrders = new HashSet<>();
 
 }

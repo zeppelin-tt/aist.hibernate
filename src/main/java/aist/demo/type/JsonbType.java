@@ -1,24 +1,33 @@
 package aist.demo.type;
 
+import aist.demo.dto.json.JobTrigger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.SerializationException;
+import org.hibernate.usertype.ParameterizedType;
 import org.hibernate.usertype.UserType;
 import org.postgresql.util.PGobject;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Properties;
 
-public class JsonbType implements UserType {
+public class JsonbType implements UserType, ParameterizedType {
 
     private final Gson GSON = new GsonBuilder().serializeNulls().create();
+
+    public static final String CLASS = "CLASS";
+    private Class returnedClass;
+    private String returnedClassName;
 
     @Override
     public Object deepCopy(Object originalValue) throws HibernateException {
@@ -38,7 +47,7 @@ public class JsonbType implements UserType {
         if (object.getValue() == null) {
             return null;
         }
-        return GSON.toJsonTree(object.getValue());
+        return GSON.fromJson(object.getValue(), typeByClassName(returnedClassName));
     }
 
 
@@ -47,9 +56,14 @@ public class JsonbType implements UserType {
         if (o == null) {
             preparedStatement.setNull(i, Types.OTHER);
         } else {
-            if (!(o instanceof JsonElement))
-                throw new SQLException("Object not instanceof JsonElement");
-            preparedStatement.setObject(i, ((JsonElement) o).getAsString(), Types.OTHER);
+            if (!(o instanceof JsonElement)) {
+                try {
+                    o = GSON.toJsonTree(o);
+                } catch (Exception e) {
+                    throw new SQLException("Cant get serialize Object to Json");
+                }
+            }
+            preparedStatement.setObject(i, ((JsonElement) o).toString(), Types.OTHER);
         }
     }
 
@@ -92,12 +106,32 @@ public class JsonbType implements UserType {
 
     @Override
     public Class<?> returnedClass() {
-        return JsonElement.class;
+        return returnedClass;
     }
+
+    @Override
+    public void setParameterValues(Properties parameters) {
+        returnedClassName = (String) parameters.get(CLASS);
+        try {
+            returnedClass = Class.forName(returnedClassName);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Class: " + returnedClassName + " is not a known class type.");
+        }
+    }
+
 
     @Override
     public int[] sqlTypes() {
         return new int[]{Types.JAVA_OBJECT};
     }
 
+    private Type typeByClassName(String className) {
+        switch (className) {
+            case "aist.demo.dto.json.JobTrigger":
+                return new TypeToken<JobTrigger>() {
+                }.getType();
+            default:
+                throw new NoSuchFieldError("нет такого класса");
+        }
+    }
 }

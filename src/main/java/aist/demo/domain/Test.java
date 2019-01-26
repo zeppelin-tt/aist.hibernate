@@ -1,40 +1,46 @@
 package aist.demo.domain;
 
+import aist.demo.dto.json.JobTrigger;
 import aist.demo.type.JsonbType;
-import com.google.gson.JsonElement;
+
 import lombok.*;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
-@TypeDefs({@TypeDef(name = "JsonbType", typeClass = JsonbType.class)})
+@TypeDefs({
+        @TypeDef(name = "JsonbType", typeClass = JsonbType.class, parameters =
+        @Parameter(name = JsonbType.CLASS, value = JobTrigger.CLASS))
+})
 @Table(name = "tests")
 public class Test {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
-    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User creator;
 
-    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "system_id")
     private AutomatedSystem system;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contour_id")
+    private Contour contour;
 
     private boolean availability;
 
@@ -42,14 +48,17 @@ public class Test {
     private String type;
 
     @Type(type = "JsonbType")
-    private JsonElement jobTrigger;
+    private JobTrigger jobTrigger;
 
     @ManyToMany(mappedBy = "tests", fetch = FetchType.LAZY)
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     private boolean isLegacy;
 
-    // TODO: 24.01.2019 разобраться, не наследуется ли это от родительских чейнов
-//    private Set<Group> groups;
+    private boolean needAccountPool;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tests_groups", joinColumns = @JoinColumn(name = "test_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private Set<Group> groups;
 
 }

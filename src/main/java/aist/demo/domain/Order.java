@@ -11,6 +11,7 @@ import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,7 @@ import java.util.Set;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // TODO: 24.01.2019 нужен ли он вообще?... Есть такое чувство, что с ним только одни проблемы будут.
@@ -59,6 +60,6 @@ public class Order {
     private PtdIntegration ptdIntegration;
 
     @OneToMany(mappedBy = "lockedBy", fetch = FetchType.LAZY)
-    private Set<AccountPool> accountsLocked;
+    private Set<AccountPool> accountsLocked = new HashSet<>();
 
 }

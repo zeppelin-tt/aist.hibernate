@@ -52,7 +52,7 @@ public class ChainConverter {
         User user = dto.getUserId() == null ?
                 null :
                 userRepo.getOne(dto.getUserId());
-        chain.setUser(user);
+        chain.setCreator(user);
         Set<Group> groups = dto.getGroupIdSet() == null ?
                 Collections.emptySet() :
                 new HashSet<>(groupRepo.findAllById(dto.getGroupIdSet()));
@@ -76,7 +76,7 @@ public class ChainConverter {
                 .map(AutomatedSystem::getId)
                 .collect(Collectors.toSet());
         dto.setSystems(systemIdSet);
-        dto.setUserId(chain.getUser().getId());
+        dto.setUserId(chain.getCreator().getId());
         dto.setTestIdOrder(chain.getTestIdOrder());
         Set<Long> groupIdSet = chain.getGroups()
                 .stream()

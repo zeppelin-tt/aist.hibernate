@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Set;
 public class ParamCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -25,6 +26,6 @@ public class ParamCategory {
     private String description;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<ParamSubCategory> subCategories;
+    private Set<ParamSubCategory> subCategories = new HashSet<>();
 
 }

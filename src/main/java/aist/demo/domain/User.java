@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String login;
@@ -37,27 +38,27 @@ public class User {
     private TribeCommand tribeCommand;
 
     @ManyToMany(mappedBy = "favoriteByUsers", fetch = FetchType.LAZY)
-    private Set<Chain> favoriteChains;
+    private Set<Chain> favoriteChains = new HashSet<>();
 
     @OneToMany(mappedBy = "createdByUser", fetch = FetchType.LAZY)
-    private Set<Group> createdGroups;
+    private Set<Group> createdGroups = new HashSet<>();
 
     @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
-    private Set<Group> includedInGroups;
+    private Set<Group> includedInGroups = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Chain> chains;
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    private Set<Chain> chains = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Test> tests;
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    private Set<Test> tests = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Tag> tags;
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "lockedBy", fetch = FetchType.LAZY)
-    private Set<Order> ordersLocked;
+    private Set<Order> ordersLocked = new HashSet<>();
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private Set<Order> ordersCreated;
+    private Set<Order> ordersCreated = new HashSet<>();
 
 }

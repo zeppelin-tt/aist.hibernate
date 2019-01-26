@@ -3,6 +3,7 @@ package aist.demo.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.Set;
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
@@ -27,9 +28,12 @@ public class Group {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "groups_users", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> members;
+    private Set<User> members = new HashSet<>();
 
     @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     private Set<Chain> chains;
+
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
+    private Set<Test> tests;
 
 }

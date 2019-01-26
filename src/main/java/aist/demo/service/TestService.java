@@ -5,10 +5,12 @@ import aist.demo.domain.Test;
 import aist.demo.dto.TestDto;
 import aist.demo.exceptions.NotFoundException;
 import aist.demo.repository.TestRepo;
+import aist.demo.validator.TestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,11 +19,13 @@ public class TestService {
 
     private final TestRepo testRepo;
     private final TestConverter testConverter;
+    private final TestValidator testValidator;
 
     @Autowired
-    public TestService(TestRepo testRepo, TestConverter testConverter) {
+    public TestService(TestRepo testRepo, TestConverter testConverter, TestValidator testValidator) {
         this.testRepo = testRepo;
         this.testConverter = testConverter;
+        this.testValidator = testValidator;
     }
 
     public TestDto find(Long id) {
@@ -38,10 +42,10 @@ public class TestService {
 
     @Transactional
     public TestDto save(TestDto dto) {
-        // TODO: 23.01.2019 не забыть валидатор
+        testValidator.forSave(dto);
         Test test = testConverter.convert(dto);
-        Test savedTest = testRepo.save(test);
-        return testConverter.convert(savedTest);
+        Test saved = testRepo.save(test);
+        return testConverter.convert(saved);
     }
 
 }

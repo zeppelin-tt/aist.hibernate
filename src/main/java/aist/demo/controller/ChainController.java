@@ -51,7 +51,7 @@ public class ChainController {
 //    @PostMapping("filter")
 //    public ResponseEntity<String> filter(@RequestHeader(value = AuthUtils.TOKEN_PARAM_NAME, required = false) String token,
 //                                         @RequestBody ChainTemplatesFilter filter) {
-//        filter.setUser(AuthUtils.getUsernameByToken(token));
+//        filter.setCreator(AuthUtils.getUsernameByToken(token));
 //        return ResponseEntity.ok(filter.fetch());
 //    }
 

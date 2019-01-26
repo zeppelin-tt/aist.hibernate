@@ -3,6 +3,7 @@ package aist.demo.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.Set;
 public class Contour {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
@@ -26,9 +27,12 @@ public class Contour {
     private String description;
 
     @OneToMany(mappedBy = "contour", fetch = FetchType.LAZY) // cascade???
+    private Set<Test> tests;
+
+    @OneToMany(mappedBy = "contour", fetch = FetchType.LAZY) // cascade???
     private Set<Chain> chains;
 
     @OneToMany(mappedBy = "contour", fetch = FetchType.LAZY)
-    private Set<AccountPool> accountPoolSet;
+    private Set<AccountPool> accountPoolSet = new HashSet<>();
 
 }

@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class ConverterData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // TODO: 24.01.2019 также не вижу пока смысла в many to many

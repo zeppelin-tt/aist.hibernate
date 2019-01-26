@@ -26,7 +26,7 @@ public class AuthUtils {
 //     * @param token Идентифкатор пользователя
 //     */
 //    public void authorize(OWNED_TABLES table, String recId, String token) throws AistBaseException {
-//        User user = getUserByToken(token, false);
+//        User creator = getUserByToken(token, false);
 //        String ownerFieldName = table.getOwnerField();
 //
 //        String owner = new QueryBuilder(table.getName(), ownerFieldName)

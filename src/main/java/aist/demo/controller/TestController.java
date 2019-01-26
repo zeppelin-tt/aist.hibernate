@@ -1,10 +1,12 @@
 package aist.demo.controller;
 
 
+import aist.demo.domain.Test;
 import aist.demo.dto.TestDto;
 import aist.demo.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -19,6 +21,12 @@ public class TestController {
     @Autowired
     public TestController(TestService service) {
         this.service = service;
+    }
+
+
+    @GetMapping("{id:\\d+}")
+    public TestDto get(@PathVariable("id") Long testId) {
+        return service.find(testId);
     }
 
     @GetMapping
