@@ -9,6 +9,7 @@ import aist.demo.exceptions.ConflictException;
 import aist.demo.exceptions.ConsistentModelException;
 import aist.demo.exceptions.NotFoundException;
 import aist.demo.repository.*;
+import aist.demo.util.ValidateUtil;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,6 @@ import java.util.stream.Collectors;
 @Validator
 public class TestValidator {
 
-    private final ChainRepo chainRepo;
     private final ContourRepo contourRepo;
     private final AutomatedSystemRepo systemRepo;
     private final UserRepo userRepo;
@@ -27,8 +27,7 @@ public class TestValidator {
     private final GroupRepo groupRepo;
 
     @Autowired
-    public TestValidator(ChainRepo chainRepo, ContourRepo contourRepo, AutomatedSystemRepo systemRepo, UserRepo userRepo, TestRepo testRepo, GroupRepo groupRepo) {
-        this.chainRepo = chainRepo;
+    public TestValidator(ContourRepo contourRepo, AutomatedSystemRepo systemRepo, UserRepo userRepo, TestRepo testRepo, GroupRepo groupRepo) {
         this.contourRepo = contourRepo;
         this.systemRepo = systemRepo;
         this.userRepo = userRepo;
@@ -37,26 +36,14 @@ public class TestValidator {
     }
 
     public void forSave(TestDto dto) {
-        if (dto.getId() != null) {
-            throw new AistBaseException("Тест для сохранения имеет id");
-        }
-        if (dto.getContourId() == null) {
-            throw new NotFoundException("Не указан контур теста" );
-        }
-        if (dto.getCreatorId() == null) {
-            throw new NotFoundException("Не указан создатель теста" );
-        }
-        if (dto.getSystemId() == null) {
-            throw new NotFoundException("Не указана автоматизированная система для теста" );
-        }
-        if(dto.getName() == null || dto.getName().isEmpty()) {
-            throw new NotFoundException("Не указано имя для Теста" );
-        }
-        JobTrigger jobTrigger = dto.getJobTrigger();
-        if (jobTrigger == null) {
-            throw new NotFoundException("Не указаны данные для Jenkins" );
-        }
-        checkJobURL(jobTrigger);
+        ValidateUtil.instance
+                .checkNull(dto.getId(), "Контур")
+                .checkNull(dto.getCreatorId(), "Создатель теста")
+                .checkNull(dto.getSystemId(), "АС")
+                .checkNull(dto.getName(), "Имя теста")
+                .checkEmptyString(dto.getName(), "Имя теста")
+                .checkNull(dto.getJobTrigger(), "данные для Jenkins");
+        checkJobURL(dto.getJobTrigger());
         if (testRepo.existsByName(dto.getName())) {
             throw new ConflictException("Тест с таким именем уже существует");
         }
@@ -67,9 +54,8 @@ public class TestValidator {
     }
 
     public void forUpdate(TestDto dto) {
-        if (dto.getId() == null) {
-            throw new AistBaseException("Тест для редактирования не имеет id");
-        }
+        ValidateUtil.instance
+                .checkNull(dto.getId(), "id");
         if (!testRepo.existsById(dto.getId())) {
             throw new NotFoundException("Нет теста с id: " + dto.getId());
         }
@@ -83,6 +69,14 @@ public class TestValidator {
             checkExistsSystems(dto);
         }
         validateGroups(dto);
+    }
+
+    public void forDelete(Long id) {
+        ValidateUtil.instance
+                .checkNull(id, "id");
+        if (!testRepo.existsById(id)) {
+            throw new NotFoundException("Нет теста с id: " + id);
+        }
     }
 
     private void checkExistsSystems(TestDto dto) {

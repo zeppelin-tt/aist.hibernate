@@ -1,10 +1,8 @@
 package aist.demo.type;
 
-import aist.demo.dto.json.JobTrigger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.SerializationException;
@@ -14,7 +12,6 @@ import org.postgresql.util.PGobject;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,7 +44,7 @@ public class JsonbType implements UserType, ParameterizedType {
         if (object.getValue() == null) {
             return null;
         }
-        return GSON.fromJson(object.getValue(), typeByClassName(returnedClassName));
+        return GSON.fromJson(object.getValue(), returnedClass);
     }
 
 
@@ -119,19 +116,9 @@ public class JsonbType implements UserType, ParameterizedType {
         }
     }
 
-
     @Override
     public int[] sqlTypes() {
         return new int[]{Types.JAVA_OBJECT};
     }
 
-    private Type typeByClassName(String className) {
-        switch (className) {
-            case "aist.demo.dto.json.JobTrigger":
-                return new TypeToken<JobTrigger>() {
-                }.getType();
-            default:
-                throw new NoSuchFieldError("нет такого класса");
-        }
-    }
 }

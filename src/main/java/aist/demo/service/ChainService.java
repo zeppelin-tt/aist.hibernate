@@ -5,12 +5,18 @@ import aist.demo.domain.Chain;
 import aist.demo.dto.ChainDto;
 import aist.demo.exceptions.NotFoundException;
 import aist.demo.repository.ChainRepo;
+import aist.demo.specification.ChainSpecificationsBuilder;
+import aist.demo.specification.SearchCriteria;
 import aist.demo.validator.ChainValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,5 +70,28 @@ public class ChainService {
         chainRepo.delete(chain);
     }
 
+    public Set<ChainDto> postSearch(List<SearchCriteria> criteria) {
+        ChainSpecificationsBuilder builder = new ChainSpecificationsBuilder();
+        for(SearchCriteria criterion : criteria) {
+            builder.with(criterion.getKey(), criterion.getOperation(), criterion.getValue(), criterion.isOrPredicate());
+        }
+        Specification<Chain> spec = builder.build();
+        return chainRepo.findAll(spec).stream()
+                .map(chainConverter::convert)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<ChainDto> getSearch(String criteria) {
+        ChainSpecificationsBuilder builder = new ChainSpecificationsBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>|~|!|startWith|endWith|contains)(\\w+?),");
+        Matcher matcher = pattern.matcher(criteria + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+        Specification<Chain> spec = builder.build();
+        return chainRepo.findAll(spec).stream()
+                .map(chainConverter::convert)
+                .collect(Collectors.toSet());
+    }
 
 }

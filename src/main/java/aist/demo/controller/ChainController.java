@@ -3,10 +3,12 @@ package aist.demo.controller;
 import aist.demo.annotate.ApiController;
 import aist.demo.dto.ChainDto;
 import aist.demo.service.ChainService;
+import aist.demo.specification.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 // TODO: 21.01.2019 тут во всем классе добавить штуки с авторизацией и РОЛЕВУЮ модель доступа!
@@ -47,12 +49,14 @@ public class ChainController {
         service.delete(id);
     }
 
-    // TODO: 22.01.2019 добавить филтр
-//    @PostMapping("filter")
-//    public ResponseEntity<String> filter(@RequestHeader(value = AuthUtils.TOKEN_PARAM_NAME, required = false) String token,
-//                                         @RequestBody ChainTemplatesFilter filter) {
-//        filter.setCreator(AuthUtils.getUsernameByToken(token));
-//        return ResponseEntity.ok(filter.fetch());
-//    }
+    @PostMapping("filter")
+    public Set<ChainDto> filterPost(@RequestBody List<SearchCriteria> criteria) {
+        return service.postSearch(criteria);
+    }
+
+    @GetMapping("filter")
+    public Set<ChainDto> filterGet(@RequestParam(value = "filter") String criteria) {
+        return service.getSearch(criteria);
+    }
 
 }

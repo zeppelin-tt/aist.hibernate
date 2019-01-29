@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -13,7 +14,12 @@ public interface TestRepo extends JpaRepository<Test, Long> {
 
     boolean existsByName(String name);
 
-//    @Query(value = "SELECT c.id FROM tests t join chains c ON t.id = ANY(c.test_id_order) WHERE t.id = :testId", nativeQuery = true)
-//    Set<Long> findChainsByTestId(@Param("token") Long testId);
+    @Query(value = "SELECT t.id, t.name " +
+            "FROM tests t " +
+            "JOIN chains c ON t.id = ANY (c.test_order) " +
+            "JOIN LATERAL unnest(c.test_order) WITH ORDINALITY AS a (elem, nr) on t.id = a.elem " +
+            "WHERE c.id = :id " +
+            "ORDER BY nr", nativeQuery = true)
+    List<Test> getTestsByChainId(@Param("id") Long id);
 
 }

@@ -40,12 +40,29 @@ public class TestService {
                 .collect(Collectors.toSet());
     }
 
+//    public Set<TestDto> getByFilter(TestDto dto) {
+//
+//    }
+
     @Transactional
     public TestDto save(TestDto dto) {
         testValidator.forSave(dto);
         Test test = testConverter.convert(dto);
         Test saved = testRepo.save(test);
         return testConverter.convert(saved);
+    }
+
+    @Transactional
+    public void update(TestDto dto) {
+        testValidator.forUpdate(dto);
+        Test test = testConverter.convert(dto);
+        testRepo.save(test);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        testValidator.forDelete(id);
+        testRepo.deleteById(id);
     }
 
 }

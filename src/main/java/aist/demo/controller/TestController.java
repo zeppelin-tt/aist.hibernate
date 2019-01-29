@@ -1,12 +1,10 @@
 package aist.demo.controller;
 
 
-import aist.demo.domain.Test;
 import aist.demo.dto.TestDto;
 import aist.demo.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -34,10 +32,25 @@ public class TestController {
         return service.findAll();
     }
 
+//    @PostMapping("filter")
+//    public Set<TestDto> getByFilter(@RequestBody TestDto dto) {
+//        return service.getByFilter(dto);
+//    }
+
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public TestDto save(@RequestBody TestDto dto) {
         return service.save(dto);
+    }
+
+    @PutMapping
+    public void update(@RequestBody TestDto dto) {
+        service.save(dto);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestBody TestDto dto) {
+        service.save(dto);
     }
 
 }
