@@ -1,0 +1,29 @@
+GET http://localhost:8080/chain/1 HTTP/1.1
+
+###
+
+POST http://localhost:8080/chain HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "TEST.CHAIN",
+  "form": "{a: 'a'}",
+  "contourId": 1
+}
+
+###
+
+
+    private Long id;
+    private String name;
+    private String form;
+    private Long contourId;
+    private Set<Long> systems;
+    private Long userId;
+    private Integer[] testIdOrder;
+    private Set<Long> groupIdSet;
+    private boolean withoutForm;
+    private Integer averageTimeSec;
+    private Integer averageTimeByTestsSec;
+    private boolean isLegacy;
+    private String comment;
