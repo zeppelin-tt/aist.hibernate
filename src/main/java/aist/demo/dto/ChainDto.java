@@ -13,8 +13,8 @@ public class ChainDto {
     private String name;
     private String form;
     private Long contourId;
-    private Set<Long> systems;
-    private Long userId;
+    private Set<Long> systemIdSet;
+    private Long creatorId;
     private Integer[] testIdOrder;
     private Set<Long> groupIdSet;
     private boolean withoutForm;

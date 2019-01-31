@@ -1,21 +1,14 @@
 package aist.demo.validator;
 
 import aist.demo.annotate.Validator;
-import aist.demo.domain.Group;
 import aist.demo.dto.TestDto;
 import aist.demo.dto.json.JobTrigger;
 import aist.demo.exceptions.AistBaseException;
 import aist.demo.exceptions.ConflictException;
-import aist.demo.exceptions.ConsistentModelException;
 import aist.demo.exceptions.NotFoundException;
 import aist.demo.repository.*;
 import aist.demo.util.ValidateUtil;
-import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Validator
 public class TestValidator {
@@ -24,20 +17,20 @@ public class TestValidator {
     private final AutomatedSystemRepo systemRepo;
     private final UserRepo userRepo;
     private final TestRepo testRepo;
-    private final GroupRepo groupRepo;
+    private final CollectionValidator collectionValidator;
 
     @Autowired
-    public TestValidator(ContourRepo contourRepo, AutomatedSystemRepo systemRepo, UserRepo userRepo, TestRepo testRepo, GroupRepo groupRepo) {
+    public TestValidator(ContourRepo contourRepo, AutomatedSystemRepo systemRepo, UserRepo userRepo, TestRepo testRepo, CollectionValidator collectionValidator) {
         this.contourRepo = contourRepo;
         this.systemRepo = systemRepo;
         this.userRepo = userRepo;
         this.testRepo = testRepo;
-        this.groupRepo = groupRepo;
+        this.collectionValidator = collectionValidator;
     }
 
     public void forSave(TestDto dto) {
         ValidateUtil.instance
-                .checkNull(dto.getId(), "Контур")
+                .checkNull(dto.getContourId(), "Контур")
                 .checkNull(dto.getCreatorId(), "Создатель теста")
                 .checkNull(dto.getSystemId(), "АС")
                 .checkNull(dto.getName(), "Имя теста")
@@ -50,7 +43,7 @@ public class TestValidator {
         checkExistsContours(dto);
         checkExistsUsers(dto);
         checkExistsSystems(dto);
-        validateGroups(dto);
+        collectionValidator.validateGroups(dto.getGroupIdSet(), true, true);
     }
 
     public void forUpdate(TestDto dto) {
@@ -68,7 +61,7 @@ public class TestValidator {
         if (dto.getSystemId() != null) {
             checkExistsSystems(dto);
         }
-        validateGroups(dto);
+        collectionValidator.validateGroups(dto.getGroupIdSet(), true, true);
     }
 
     public void forDelete(Long id) {
@@ -94,20 +87,6 @@ public class TestValidator {
     private void checkExistsContours(TestDto dto) {
         if (!contourRepo.existsById(dto.getContourId())) {
             throw new NotFoundException("Нет контура с id: " + dto.getContourId());
-        }
-    }
-
-    private void validateGroups(TestDto dto) {
-        Set<Long> groupIdSet = dto.getGroups();
-        if (groupIdSet != null && !groupIdSet.isEmpty()) {
-            Set<Group> dbGroups = new HashSet<>(groupRepo.findAllById(groupIdSet));
-            if (dbGroups.size() != groupIdSet.size()) {
-                Set<Long> idInDb = dbGroups
-                        .stream()
-                        .map(Group::getId)
-                        .collect(Collectors.toSet());
-                throw new ConsistentModelException("В БД нет следующих id Групп: " + Sets.difference(groupIdSet, idInDb));
-            }
         }
     }
 

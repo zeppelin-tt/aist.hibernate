@@ -1,19 +1,20 @@
 package aist.demo.validator;
 
 import aist.demo.annotate.Validator;
-import aist.demo.domain.AutomatedSystem;
-import aist.demo.domain.Group;
 import aist.demo.domain.Test;
 import aist.demo.dto.ChainDto;
 import aist.demo.exceptions.AistBaseException;
 import aist.demo.exceptions.ConflictException;
 import aist.demo.exceptions.ConsistentModelException;
 import aist.demo.exceptions.NotFoundException;
-import aist.demo.repository.*;
+import aist.demo.repository.ChainRepo;
+import aist.demo.repository.ContourRepo;
+import aist.demo.repository.TestRepo;
+import aist.demo.repository.UserRepo;
+import aist.demo.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,89 +24,63 @@ public class ChainValidator {
 
     private final ChainRepo chainRepo;
     private final ContourRepo contourRepo;
-    private final AutomatedSystemRepo systemRepo;
     private final UserRepo userRepo;
     private final TestRepo testRepo;
-    private final GroupRepo groupRepo;
+    private final CollectionValidator collectionValidator;
+
 
     @Autowired
-    public ChainValidator(ChainRepo chainRepo, ContourRepo contourRepo, AutomatedSystemRepo systemRepo, UserRepo userRepo, TestRepo testRepo, GroupRepo groupRepo) {
+    public ChainValidator(ChainRepo chainRepo, ContourRepo contourRepo, UserRepo userRepo, TestRepo testRepo, CollectionValidator collectionValidator) {
         this.chainRepo = chainRepo;
         this.contourRepo = contourRepo;
-        this.systemRepo = systemRepo;
         this.userRepo = userRepo;
         this.testRepo = testRepo;
-        this.groupRepo = groupRepo;
+        this.collectionValidator = collectionValidator;
     }
 
     public void forSave(ChainDto dto) {
-        if (dto.getId() != null) {
-            throw new AistBaseException("Генератор для сохранения имеет id");
-        }
-        if (dto.getContourId() == null) {
-            throw new NotFoundException("Не указан контур цепочки" );
-        }
-        if (dto.getUserId() == null) {
-            throw new NotFoundException("Не указан создатель цепочки" );
-        }
+        ValidateUtil.instance
+                .checkNonNull(dto.getId(), "Id генератора")
+                .checkNull(dto.getContourId(), "Контур")
+                .checkNull(dto.getCreatorId(), "Создатель генератора")
+                .checkEmptyString(dto.getName(), "Имя генератора");
         if (chainRepo.existsByName(dto.getName())) {
-            throw new ConflictException("Генератор с таким именем или кодом уже существует");
+            throw new ConflictException("Генератор с таким именем уже существует");
         }
         if (!contourRepo.existsById(dto.getContourId())) {
             throw new NotFoundException("Нет контура с id: " + dto.getContourId());
         }
-        validateAutomatedSystems(dto);
-        if (!userRepo.existsById(dto.getUserId())) {
+        collectionValidator.validateAutomatedSystems(dto.getSystemIdSet(), false, false);
+        if (!userRepo.existsById(dto.getCreatorId())) {
             throw new NotFoundException("Нет пользователя с id: " + dto.getContourId());
         }
         validateTests(dto);
-        validateGroups(dto);
+        collectionValidator.validateGroups(dto.getGroupIdSet(), true, true);
     }
 
     public void forUpdate(ChainDto dto) {
-        if (dto.getId() == null) {
-            throw new AistBaseException("Генератор для редактирования не имеет id");
-        }
+        ValidateUtil.instance
+                .checkEmptyString(dto.getName(), "Имя генератора")
+                .checkNull(dto.getId(), "Id генератора");
         if (!chainRepo.existsById(dto.getId())) {
             throw new NotFoundException("Нет генератора с id: " + dto.getId());
         }
-        validateAutomatedSystems(dto);
-        if (!userRepo.existsById(dto.getUserId())) {
+        collectionValidator.validateAutomatedSystems(dto.getSystemIdSet(),false, false);
+        if (!userRepo.existsById(dto.getCreatorId())) {
             throw new NotFoundException("Нет пользователя с id: " + dto.getContourId());
         }
         if (!contourRepo.existsById(dto.getContourId())) {
             throw new NotFoundException("Нет контура с id: " + dto.getContourId());
         }
         validateTests(dto);
-        validateGroups(dto);
-    }
-
-
-    private void validateAutomatedSystems(ChainDto dto) {
-        Set<Long> systemIdSet = dto.getSystems();
-        if (systemIdSet != null) {
-            if (systemIdSet.isEmpty()) {
-                // TODO: 23.01.2019 переделать логику!
-                throw new AistBaseException("Цепочка должна включать хотя бы одну систему");
-            } else {
-                Set<AutomatedSystem> dbAutomatedSystems = new HashSet<>(systemRepo.findAllById(systemIdSet));
-                if (dbAutomatedSystems.size() != systemIdSet.size()) {
-                    Set<Long> idInDb = dbAutomatedSystems
-                            .stream()
-                            .map(AutomatedSystem::getId)
-                            .collect(Collectors.toSet());
-                    systemIdSet.removeAll(idInDb);
-                    throw new ConsistentModelException("В БД нет следующих id АС: " + systemIdSet.toString());
-                }
-            }
-        }
+        collectionValidator.validateGroups(dto.getGroupIdSet(),true, true);
     }
 
     private void validateTests(ChainDto dto) {
         Integer[] testIdOrder = dto.getTestIdOrder();
         if (testIdOrder != null) {
             if (testIdOrder.length == 0) {
-                throw new AistBaseException("Цепочка должна включать хотя бы один тест");
+                throw new AistBaseException("Генератор должен включать хотя бы один тест");
             } else {
                 List<Long> listTestIdOrder = Arrays.stream(testIdOrder)
                         .mapToLong(i -> i)
@@ -120,21 +95,6 @@ public class ChainValidator {
                     listTestIdOrder.removeAll(idInDb);
                     throw new ConsistentModelException("В БД нет следующих id Тестов: " + listTestIdOrder.toString());
                 }
-            }
-        }
-    }
-
-    private void validateGroups(ChainDto dto) {
-        Set<Long> groupIdSet = dto.getGroupIdSet();
-        if (groupIdSet != null && !groupIdSet.isEmpty()) {
-            Set<Group> dbGroups = new HashSet<>(groupRepo.findAllById(groupIdSet));
-            if (dbGroups.size() != groupIdSet.size()) {
-                Set<Long> idInDb = dbGroups
-                        .stream()
-                        .map(Group::getId)
-                        .collect(Collectors.toSet());
-                groupIdSet.removeAll(idInDb);
-                throw new ConsistentModelException("В БД нет следующих id Тестов: " + groupIdSet.toString());
             }
         }
     }

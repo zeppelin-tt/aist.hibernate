@@ -19,6 +19,6 @@ public class TestDto {
     private Set<String> tags;
     private boolean isLegacy;
     private boolean needAccountPool;
-    private Set<Long> groups;
+    private Set<Long> groupIdSet;
 
 }

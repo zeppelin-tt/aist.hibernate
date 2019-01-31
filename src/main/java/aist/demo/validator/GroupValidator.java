@@ -2,11 +2,11 @@ package aist.demo.validator;
 
 import aist.demo.annotate.Validator;
 import aist.demo.dto.GroupDto;
-import aist.demo.exceptions.AistBaseException;
 import aist.demo.exceptions.ConflictException;
 import aist.demo.exceptions.NotFoundException;
 import aist.demo.repository.GroupRepo;
 import aist.demo.repository.UserRepo;
+import aist.demo.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Validator
@@ -22,9 +22,10 @@ public class GroupValidator {
     }
 
     public GroupDto forSave(GroupDto dto) {
-        if (dto.getId() != null) {
-            throw new AistBaseException("Группа для сохранения имеет id");
-        }
+        ValidateUtil.instance
+                .checkNonNull(dto.getId(), "Id группы")
+                .checkNull(dto.getCreatedByUserId(), "Id создателя группы")
+                .checkEmptyString(dto.getName(), "Имя группы");
         if (groupRepo.existsByName(dto.getName())) {
             throw new ConflictException("Группа с таким именем уже существует");
         }

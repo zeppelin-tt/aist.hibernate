@@ -7,6 +7,7 @@ import aist.demo.dto.TribeCommandDto;
 import aist.demo.exceptions.ConflictException;
 import aist.demo.repository.TribeCommandRepo;
 import aist.demo.repository.TribeRepo;
+import aist.demo.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Validator
@@ -22,9 +23,7 @@ public class TribeCommandValidator {
     }
 
     public TribeCommandDto forSave(TribeCommandDto dto) {
-        if (dto.getId() != null) {
-            throw new AistBaseException("Команда трайба для сохранения имеет id");
-        }
+        ValidateUtil.instance.checkNull(dto.getId(), "Id команды трайба");
         if (commandRepo.existsByName(dto.getName())) {
             throw new ConflictException("Команда трайба с таким именем уже существует");
         }
@@ -38,9 +37,7 @@ public class TribeCommandValidator {
     }
 
     public TribeCommandDto forUpdate(TribeCommandDto dto) {
-        if (dto.getId() == null) {
-            throw new AistBaseException("Команда трайба для редактирования не имеет id");
-        }
+        ValidateUtil.instance.checkNonNull(dto.getId(), "Id команды трайба");
         if (!tribeRepo.existsById(dto.getId())) {
             throw new NotFoundException("Id нет в базе: " + dto.getId());
         }

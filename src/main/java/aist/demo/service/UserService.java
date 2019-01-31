@@ -73,7 +73,7 @@ public class UserService {
             User user = userConverter.convert(dto);
             savedUser = userRepo.save(user);
             // TODO: 19.01.2019 предусмотреть все связи при создании пользователя
-//            connector.update("UPDATE groups SET members = members || '" + login + ",' WHERE name = 'public'");
+//            connector.update("UPDATE groupIdSet SET members = members || '" + login + ",' WHERE name = 'public'");
         } catch (Exception e) {
             throw  new ServerErrorException("Неизвестная ошибка сервера");
         }

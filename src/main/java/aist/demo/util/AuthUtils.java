@@ -50,7 +50,7 @@ public class AuthUtils {
 //     * @param username Имя пользователя
 //     */
 //    public static void authorizeRead(OWNED_TABLES table, String recId, String username) throws ForbiddenException, NotFoundException {
-//        Set<String> groups = getUserGroups(username);
+//        Set<String> groupIdSet = getUserGroups(username);
 //
 //        List<Map<String, String>> entityInfo = new QueryBuilder(table.getName(), table.getOwnerField(), table.getGroupField())
 //                .appendEqualityFilter(table.getIdField(), recId).fetch();
@@ -73,8 +73,8 @@ public class AuthUtils {
 //        if (owner.equals(username))
 //            return;
 //
-//        groups.retainAll(authorizedGroups);
-//        if (groups.isEmpty()) {
+//        groupIdSet.retainAll(authorizedGroups);
+//        if (groupIdSet.isEmpty()) {
 //            throw new ForbiddenException();
 //        }
 //    }
@@ -104,16 +104,16 @@ public class AuthUtils {
 ////    }
 //
 ////    public static Set<String> getUserGroups(String username) {
-////        Set<String> groups = new HashSet<>();
-////        groups.add(ANONYMOUS_GROUP);
+////        Set<String> groupIdSet = new HashSet<>();
+////        groupIdSet.add(ANONYMOUS_GROUP);
 ////        try {
-////            groups.addAll(db.fetchAll(String.format(
+////            groupIdSet.addAll(db.fetchAll(String.format(
 ////                    "select %s from %s where %s ~ '\\y%s\\y'",
 ////                    GROUPS.GROUP_NAME, GROUPS.TABLE_NAME, GROUPS.MEMBERS, username
 ////            )).stream().map(map -> map.get(GROUPS.GROUP_NAME)).collect(toSet()));
 ////        } catch (SQLException ignored) {
 ////        }
-////        return groups;
+////        return groupIdSet;
 ////    }
 
 }

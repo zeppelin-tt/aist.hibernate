@@ -3,6 +3,7 @@ package aist.demo.util;
 import aist.demo.exceptions.IncorrectParameters;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 public enum ValidateUtil {
 
@@ -11,6 +12,18 @@ public enum ValidateUtil {
     public ValidateUtil checkNull(Object param, @NotNull String paramName) {
         if (param == null)
             throw new IncorrectParameters("Необходимо указать параметр: " + paramName);
+        return this;
+    }
+
+    public ValidateUtil checkNonNull(Object param, @NotNull String paramName) {
+        if (param != null)
+            throw new IncorrectParameters("Параметр не должен быть указан: " + paramName);
+        return this;
+    }
+
+    public ValidateUtil checkEmptyCollection(Collection param, @NotNull String paramName) {
+        if (param.isEmpty())
+            throw new IncorrectParameters("Необходимо указать хотя бы один параметр: " + paramName);
         return this;
     }
 

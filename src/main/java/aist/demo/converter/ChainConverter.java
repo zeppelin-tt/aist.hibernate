@@ -44,14 +44,14 @@ public class ChainConverter {
                 null :
                 contourRepo.getOne(dto.getContourId());
         chain.setContour(contour);
-        Set<AutomatedSystem> systems = dto.getSystems() == null ?
+        Set<AutomatedSystem> systems = dto.getSystemIdSet() == null ?
                 Collections.emptySet() :
-                new HashSet<>(systemRepo.findAllById(dto.getSystems()));
+                new HashSet<>(systemRepo.findAllById(dto.getSystemIdSet()));
         chain.setSystems(systems);
         chain.setTestIdOrder(dto.getTestIdOrder());
-        User user = dto.getUserId() == null ?
+        User user = dto.getCreatorId() == null ?
                 null :
-                userRepo.getOne(dto.getUserId());
+                userRepo.getOne(dto.getCreatorId());
         chain.setCreator(user);
         Set<Group> groups = dto.getGroupIdSet() == null ?
                 Collections.emptySet() :
@@ -75,8 +75,8 @@ public class ChainConverter {
                 .stream()
                 .map(AutomatedSystem::getId)
                 .collect(Collectors.toSet());
-        dto.setSystems(systemIdSet);
-        dto.setUserId(chain.getCreator().getId());
+        dto.setSystemIdSet(systemIdSet);
+        dto.setCreatorId(chain.getCreator().getId());
         dto.setTestIdOrder(chain.getTestIdOrder());
         Set<Long> groupIdSet = chain.getGroups()
                 .stream()
