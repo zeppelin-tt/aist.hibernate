@@ -12,18 +12,3 @@ Content-Type: application/json
 }
 
 ###
-
-
-    private Long id;
-    private String name;
-    private String form;
-    private Long contourId;
-    private Set<Long> systems;
-    private Long userId;
-    private Integer[] testIdOrder;
-    private Set<Long> groupIdSet;
-    private boolean withoutForm;
-    private Integer averageTimeSec;
-    private Integer averageTimeByTestsSec;
-    private boolean isLegacy;
-    private String comment;

@@ -7,13 +7,3 @@ Content-Type: application/json
 }
 
 ###
-
-private Long id;
-private String login;
-private String password;
-private String token;
-private String email;
-private Long tribeId;
-private Long commandTribeId;
-private Set<Long> groups;
-private Set<Long> chains;
